@@ -37,11 +37,40 @@ A feature-rich, lightweight Kanban board web application built with React, TypeS
 
 ## 🚀 Quick Start
 
-### Prerequisites
+Choose your preferred installation method:
 
-- Node.js 16+ and npm
+### Option 1: Docker (Recommended) 🐳
 
-### Installation
+**Prerequisites:** Docker and Docker Compose
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd trello-lite
+
+# Production (recommended)
+docker-compose up -d
+# Access at http://localhost
+
+# OR Development (with hot-reload)
+docker-compose -f docker-compose.dev.yml up -d
+# Access at http://localhost:5173
+```
+
+**Using Makefile (easier):**
+```bash
+make up          # Production
+make up-dev      # Development
+make logs        # View logs
+make down        # Stop containers
+make help        # See all commands
+```
+
+📖 **[Complete Docker Guide →](DOCKER.md)**
+
+### Option 2: Node.js
+
+**Prerequisites:** Node.js 16+ and npm
 
 ```bash
 # Clone the repository
