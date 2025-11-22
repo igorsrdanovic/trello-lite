@@ -4,9 +4,13 @@ import { useState, useEffect, useRef } from 'react';
  * Custom hook for syncing state with localStorage
  * Includes debouncing to batch rapid changes
  */
-export function useLocalStorage(key, initialValue, debounceMs = 300) {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+  debounceMs = 300
+): [T, (value: T | ((val: T) => T)) => void] {
   // Lazy initialization
-  const [value, setValue] = useState(() => {
+  const [value, setValue] = useState<T>(() => {
     try {
       const item = localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
@@ -16,7 +20,7 @@ export function useLocalStorage(key, initialValue, debounceMs = 300) {
     }
   });
 
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Clear existing timeout
@@ -30,7 +34,7 @@ export function useLocalStorage(key, initialValue, debounceMs = 300) {
         localStorage.setItem(key, JSON.stringify(value));
       } catch (error) {
         console.error('Error saving to localStorage:', error);
-        if (error.name === 'QuotaExceededError') {
+        if (error instanceof Error && error.name === 'QuotaExceededError') {
           alert('Storage quota exceeded. Cannot save changes.');
         }
       }

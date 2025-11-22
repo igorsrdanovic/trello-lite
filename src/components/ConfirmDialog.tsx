@@ -1,8 +1,15 @@
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
-export default function ConfirmDialog({ message, onConfirm, onCancel }) {
+interface Props {
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export default function ConfirmDialog({ message, onConfirm, onCancel }: Props) {
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onCancel();
       }
@@ -12,7 +19,7 @@ export default function ConfirmDialog({ message, onConfirm, onCancel }) {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [onCancel]);
 
-  const handleBackdropClick = (e) => {
+  const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onCancel();
     }
@@ -23,15 +30,20 @@ export default function ConfirmDialog({ message, onConfirm, onCancel }) {
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6"
+      >
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Confirm Action
         </h3>
-        <p className="text-gray-700 mb-6">{message}</p>
+        <p className="text-gray-700 dark:text-gray-300 mb-6">{message}</p>
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             Cancel
           </button>
@@ -42,7 +54,7 @@ export default function ConfirmDialog({ message, onConfirm, onCancel }) {
             Delete
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

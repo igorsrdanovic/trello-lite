@@ -1,9 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
-export default function AddColumnButton({ onAdd }) {
+interface Props {
+  onAdd: (title: string) => void;
+}
+
+export default function AddColumnButton({ onAdd }: Props) {
   const [isAdding, setIsAdding] = useState(false);
   const [title, setTitle] = useState('');
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isAdding) {
@@ -24,7 +29,7 @@ export default function AddColumnButton({ onAdd }) {
     setIsAdding(false);
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleAdd();
     } else if (e.key === 'Escape') {
@@ -34,7 +39,11 @@ export default function AddColumnButton({ onAdd }) {
 
   if (isAdding) {
     return (
-      <div className="flex-shrink-0 w-[300px] bg-white rounded-lg shadow-sm p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex-shrink-0 w-[300px] bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4"
+      >
         <input
           ref={inputRef}
           type="text"
@@ -43,7 +52,7 @@ export default function AddColumnButton({ onAdd }) {
           onKeyDown={handleKeyDown}
           onBlur={handleAdd}
           placeholder="Enter column title"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white mb-2"
         />
         <div className="flex gap-2">
           <button
@@ -56,19 +65,21 @@ export default function AddColumnButton({ onAdd }) {
           <button
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleCancel}
-            className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors text-sm"
+            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm"
           >
             Cancel
           </button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => setIsAdding(true)}
-      className="flex-shrink-0 w-[300px] h-fit bg-white bg-opacity-60 hover:bg-opacity-80 rounded-lg p-4 transition-all flex items-center gap-2 text-gray-700 hover:text-gray-900"
+      className="flex-shrink-0 w-[300px] h-fit bg-white dark:bg-gray-800 bg-opacity-60 dark:bg-opacity-60 hover:bg-opacity-80 dark:hover:bg-opacity-80 rounded-lg p-4 transition-all flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white shadow-sm"
     >
       <svg
         className="w-5 h-5"
@@ -84,6 +95,6 @@ export default function AddColumnButton({ onAdd }) {
         />
       </svg>
       <span className="font-medium">Add Column</span>
-    </button>
+    </motion.button>
   );
 }
